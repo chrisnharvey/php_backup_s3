@@ -105,21 +105,21 @@ function backupDBs($hostname, $username, $password, $prefix, $post_backup_query 
 	if (schedule == "hourly") deleteHourlyBackups($prefix);
   
   // Connecting, selecting database
-  $link = mysql_connect($hostname, $username, $password) or die('Could not connect: ' . mysql_error());
+  $link = mysqli_connect($hostname, $username, $password) or die('Could not connect: ' . mysqli_error($link));
   
   $query = 'SHOW DATABASES';
-  $result = mysql_query($query) or die('Query failed: ' . mysql_error());
+  $result = mysqli_query($link, $query) or die('Query failed: ' . mysqli_error($link));
   
   $databases = array();
   
-  while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+  while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
       foreach ($row as $database) {
       $databases[] = $database;
       }
   }
   
   // Free resultset
-  mysql_free_result($result);
+  mysqli_free_result($result);
 
   //Run backups on each DB found
   foreach ($databases as $database) {
@@ -128,11 +128,11 @@ function backupDBs($hostname, $username, $password, $prefix, $post_backup_query 
   
   //Run post backup queries if needed
   if ($post_backup_query != '') {
-    $result = mysql_query($post_backup_query) or die('Query failed: ' . mysql_error());
+    $result = mysqli_query($link, $post_backup_query) or die('Query failed: ' . mysqli_error($link));
   }
   
   // Closing connection
-  mysql_close($link);
+  mysqli_close($link);
   
 }
 
@@ -165,11 +165,11 @@ function xtrabackupDBs($database, $username, $password, $xtrabackup, $datadir, $
   `rm -rf /root/xtrabackup`;
   
   // Connecting, selecting database
-  $link = mysql_connect($hostname, $username, $password) or die('Could not connect: ' . mysql_error());
+  $link = mysqli_connect($hostname, $username, $password) or die('Could not connect: ' . mysql_error());
   
   //Run post backup queries if needed
   if ($post_backup_query != '') {
-    $result = mysql_query($post_backup_query) or die('Query failed: ' . mysql_error());
+    $result = mysqli_query($link, $post_backup_query) or die('Query failed: ' . mysql_error());
   }
   
   // Closing connection
