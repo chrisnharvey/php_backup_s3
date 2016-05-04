@@ -82,6 +82,7 @@ function backupFiles($targets, $prefix = '') {
     
     // compress local files
     $cleanTarget = urlencode($target);
+    $cleanTarget = md5($cleanTarget);
     `tar -cjf "$prefix-$cleanTarget.tar.bz2" -C / "$target"`;
     
     $backup_to = s3Path($prefix,"/".$target."backup.tar.bz2");
