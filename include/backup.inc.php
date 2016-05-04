@@ -50,7 +50,7 @@ switch (schedule) {
 	case "hourly":
 		deleteHourlyBackups();
 		break;
-	default:
+	case "daily":
 		deleteDailyBackups();
 		break;	
 }
